@@ -35,3 +35,42 @@ VIRTUAL_HEIGHT = 288
 local background = love.graphics.newImage('background_night.png')
 local ground = love.graphics.newImage('ground_night.png')
 
+-- load function - runs 1st in running of the game
+function love.load()
+    -- adjust the graphics setting filters for better pixel art
+    love.graphics.setDefaultFilter('nearest', 'nearest')
+    -- set the window name
+    love.graphics.setTitle('Flappy Cow')
+    -- setup the virtual resolution with push
+    push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT,{
+        vsync = true,
+        fullscreen = false,
+        resizable = true
+    })
+
+end
+
+-- setup the resize function using the push resize method
+function love.resize(w,h)
+    push:resize(w,h)
+end
+
+-- define function for definition of user input (keys)
+function love.keypressed(key)
+    if key == 'escape' then
+        love.event.quit()
+end
+
+-- love render function
+function love.draw()
+    -- start the push rendering
+    push:start()
+    --[[
+        use love.graphics.draw and take the background and ground local variables established before (which has to images) at set coordinates
+    ]]
+    love.graphics.draw(background, 0, 0)
+    -- draw ground image at the bottom - the size of the ground image
+    love.graphics.draw(ground, 0, VIRTUAL_HEIGHT - 32)
+    -- end push rendering
+    push:finish()
+end
