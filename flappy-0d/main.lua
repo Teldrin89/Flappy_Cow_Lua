@@ -32,7 +32,7 @@ VIRTUAL_HEIGHT = 288
 ]]
 
 -- define localy used variables for the background and ground images
-local background = love.graphics.newImage('background.png')
+local background = love.graphics.newImage('background_night.png')
 local ground = love.graphics.newImage('ground_night.png')
 
 -- load function - runs 1st in running of the game
