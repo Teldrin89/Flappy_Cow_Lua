@@ -23,7 +23,7 @@ VIRTUAL_HEIGHT = 288
 ]]
 
 -- define localy used variables for the background and ground images
-local background = love.graphics.newImage('background_night.png')
+local background = love.graphics.newImage('background_night_no_moon.png')
 -- define the variable to track the scroll of images
 local backgroundScroll = 0
 local ground = love.graphics.newImage('ground_night.png')
@@ -36,7 +36,7 @@ local BACKGROUND_SCROLL_SPEED = 30
 local GROUND_SCROLL_SPEED = 60
 -- set a looping point for both images
 local BACKGROUND_LOOPING_POINT = 413
-local GROUND_LOOPING_POINT = 449
+local GROUND_LOOPING_POINT = 559
 
 -- load function - runs 1st in running of the game
 function love.load()
@@ -82,9 +82,9 @@ function love.draw()
     -- start the push rendering
     push:start()
     -- update the draw function with scroll position that will be updated
-    love.graphics.draw(background, backgroundScroll, 0)
+    love.graphics.draw(background, -backgroundScroll, 0)
     -- draw ground image at the bottom - the size of the ground image
-    love.graphics.draw(ground, groundScroll, VIRTUAL_HEIGHT - 32)
+    love.graphics.draw(ground, -groundScroll, VIRTUAL_HEIGHT - 32)
     -- end push rendering
     push:finish()
 end
