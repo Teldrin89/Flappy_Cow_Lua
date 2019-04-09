@@ -26,3 +26,12 @@ push = require 'push'
 -- setup the virtual resolution
 VIRTUAL_WIDTH = 512
 VIRTUAL_HEIGHT = 288
+
+--[[ 
+    background and ground will be scrolling throught the game time with 2 different rates - it's called parallax scrolling
+]]
+
+-- define localy used variables for the background and ground images
+local background = love.graphics.newImage('background_night.png')
+local ground = love.graphics.newImage('ground_night.png')
+
