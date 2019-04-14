@@ -19,7 +19,8 @@ VIRTUAL_WIDTH = 512
 VIRTUAL_HEIGHT = 288
 
 --[[ 
-    background and ground will be scrolling throught the game time with 2 different rates - it's called parallax scrolling
+    background and ground will be scrolling throught the game time with 2 
+    different rates - it's called parallax scrolling
 ]]
 
 -- define localy used variables for the background and ground images
@@ -28,8 +29,10 @@ local background = love.graphics.newImage('background_night_no_moon.png')
 local backgroundScroll = 0
 local ground = love.graphics.newImage('ground_night.png')
 local groundScroll = 0
---[[ define the values of speed for both ground and background - one shall be       faster than the other to create the ilussion of moving
-    also to avoid ending of each of the images both of them will be looped with
+--[[ 
+    define the values of speed for both ground and background - one shall be 
+    faster than the other to create the ilussion of moving also to avoid ending
+    of each of the images both of them will be looped with
     looping points
 ]]
 local BACKGROUND_SCROLL_SPEED = 30
