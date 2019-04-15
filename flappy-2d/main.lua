@@ -14,6 +14,12 @@ WINDOW_HEIGHT = 720
 
 -- add push library
 push = require 'push'
+-- add class library
+Class = require 'class'
+-- add Bird class file
+require 'Cow'
+-- add Moon class file
+require 'Moon'
 -- setup the virtual resolution
 VIRTUAL_WIDTH = 512
 VIRTUAL_HEIGHT = 288
@@ -40,6 +46,9 @@ local GROUND_SCROLL_SPEED = 60
 -- set a looping point for both images
 local BACKGROUND_LOOPING_POINT = 413
 local GROUND_LOOPING_POINT = 559
+-- create a local variable for cow
+local cow = Cow()
+local moon = Moon()
 
 -- load function - runs 1st in running of the game
 function love.load()
@@ -88,6 +97,10 @@ function love.draw()
     love.graphics.draw(background, -backgroundScroll, 0)
     -- draw ground image at the bottom - the size of the ground image
     love.graphics.draw(ground, -groundScroll, VIRTUAL_HEIGHT - 32)
+    -- draw the cow using the class function
+    cow:render()
+    -- draw the moon on the background sky
+    moon:render()
     -- end push rendering
     push:finish()
 end
