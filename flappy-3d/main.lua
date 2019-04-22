@@ -88,7 +88,8 @@ function love.update(dt)
         object (as in real life it also has acceleration)
         this will be done with update function of cow class
     ]]
-    bird:update(dt)
+    --TODO: finished on 41:53
+    cow:update(dt)
 end
 -- love render function
 function love.draw()
