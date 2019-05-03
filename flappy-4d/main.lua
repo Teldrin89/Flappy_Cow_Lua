@@ -23,7 +23,11 @@ require 'Moon'
 -- setup the virtual resolution
 VIRTUAL_WIDTH = 512
 VIRTUAL_HEIGHT = 288
-
+--[[
+    to counter act on the gravity that has been already taken into account there
+    need to be some jump velocity applied but at the same time later gravity
+    still should be applied as well to the cow model 
+]]
 -- define localy used variables for the background and ground images
 local background = love.graphics.newImage('background_night_no_moon.png')
 -- define the variable to track the scroll of images
@@ -45,6 +49,13 @@ local GROUND_LOOPING_POINT = 559
 local cow = Cow()
 local moon = Moon()
 
+--[[
+    to make the main file as compact and organised as possiblle it's a good
+    practice to shift some of the functions and properties of elements of
+    the game to the elemnt class - in this case the input handling will be
+    delegated to the cow class
+]]
+
 -- load function - runs 1st in running of the game
 function love.load()
     -- adjust the graphics setting filters for better pixel art
@@ -58,6 +69,8 @@ function love.load()
         resizable = true
     })
 
+    -- add the empty table of keypressed to the load function
+    love.keyboard.keysPressed = {}
 end
 
 -- setup the resize function using the push resize method
@@ -67,8 +80,27 @@ end
 
 -- define function for definition of user input (keys)
 function love.keypressed(key)
+    -- keep track of the pressed keys
+    love.keyboard.keysPressed[key] = true
     if key == 'escape' then
         love.event.quit()
+    end
+end
+
+--[[
+    additional function that will test if any key as pressed during last 
+    frame update - can help in order to avoid for example the love.keypressed
+    function to be overlaped in some other class sepcific files
+]]
+function love.keyboard.wasPressed(key)
+    --[[
+        return true if a key was pressed and false if not (checking a table 
+        established in load)
+    ]] 
+    if love.keyboard.keysPressed[key] then
+        return true
+    else
+        return false
     end
 end
 
@@ -88,9 +120,12 @@ function love.update(dt)
         object (as in real life it also has acceleration)
         this will be done with update function of cow class
     ]]
-    --TODO: finished on 41:53
+    -- run update function in cow class
     cow:update(dt)
+    -- reset the keyPressed table
+    love.keyboard.keysPressed = {}
 end
+
 -- love render function
 function love.draw()
     -- start the push rendering
