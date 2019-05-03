@@ -31,6 +31,7 @@ function Cow:update(dt)
         will counter the gravity
     ]]
     if love.keyboard.wasPressed('space') then
+        -- applying the jump as a velocity for the cow sprite in opposite dir.
         self.dy = -JUMP
     end
 
