@@ -3,6 +3,8 @@ Cow = Class{}
 -- additional constant deffinitions for cow class
 -- gravity value set to 20, is completely arbitrary value (found with tuning)
 local GRAVITY = 20
+-- set jump value to 5 (arbitrary value)
+local JUMP = 5
 -- init function for Cow class - initializes the object
 function Cow:init()
     -- set image for the cow class
@@ -23,6 +25,15 @@ function Cow:update(dt)
     self.dy = self.dy + GRAVITY*dt
     -- update the "y" position of  cow with calculated speed
     self.y = self.y + self.dy
+    --[[
+        using the table with keyspressed from main.lua use the space bar key
+        pressed check to apply the velocity to the cow unit in y direction that
+        will counter the gravity
+    ]]
+    if love.keyboard.wasPressed('space') then
+        self.dy = -JUMP
+    end
+
 end
 
 -- add a render function
