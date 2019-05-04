@@ -45,7 +45,12 @@ local BACKGROUND_LOOPING_POINT = 413
 local GROUND_LOOPING_POINT = 559
 -- create a local variable for cow
 local cow = Cow()
+-- added local variable for moon sprite
 local moon = Moon()
+-- add local table for all pipes
+local pipes = {}
+-- add timer variable to determine when to spawn next pipe
+local spawnTimer = 0
 
 -- load function - runs 1st in running of the game
 function love.load()
@@ -111,8 +116,22 @@ function love.update(dt)
         object (as in real life it also has acceleration)
         this will be done with update function of cow class
     ]]
+    -- handle the increase of timer value
+    spawnTimer = spawnTimer + dt
+    -- check if the spawn timer is grater than set value (eg. 2) to add new pipe
+    if spawnTimer > 2 then
+        --[[
+            to add new pipe insert it in the table set up earlier for all pipes
+            ("pipes") and insert an object ("Pipe()"), indexing start at 1
+        ]]
+        table.insert(pipes, Pipe())
+        -- reset the spawnTimer to 0 after adding a single pipe
+        spawnTimer = 0
+    end
+
     -- run update function in cow class
     cow:update(dt)
+    
     -- reset the keyPressed table
     love.keyboard.keysPressed = {}
 end
