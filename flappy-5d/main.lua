@@ -131,7 +131,24 @@ function love.update(dt)
 
     -- run update function in cow class
     cow:update(dt)
-    
+
+    -- iterate over a table with key-value pairs
+    for k, pipe in pairs(pipes) do
+        -- update for each pipe - this will have the effect of scrolling
+        pipe:update(dt)
+        --[[ 
+            remove the pipe once it will be over the left side of the screen,
+            check not against 0 (as then it would remove it before it 
+            completely gone trhough screen) but against it's width
+        ]]
+        if pipe.x < -pipe.width then
+            --[[
+                the table.remove function to remove said pipe with the key value
+                set in the loop ("k")
+            ]]
+            table.remove(pipes, k)
+        end
+    end
     -- reset the keyPressed table
     love.keyboard.keysPressed = {}
 end
