@@ -159,6 +159,15 @@ function love.draw()
     push:start()
     -- update the draw function with scroll position that will be updated
     love.graphics.draw(background, -backgroundScroll, 0)
+    --[[
+        to have the pipes drawn as if they are sticking out of the ground there
+        has to be set a layer order - that's why they have to be drawn in this
+        place: after bacground but before ground
+    ]]
+    -- use the same iteration of key-value pair table
+    for k, pipe in pairs(pipes) do
+        pipe:render()
+    end
     -- draw ground image at the bottom - the size of the ground image
     love.graphics.draw(ground, -groundScroll, VIRTUAL_HEIGHT - 32)
     -- draw the cow using the class function
