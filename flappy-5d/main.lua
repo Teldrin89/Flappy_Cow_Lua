@@ -20,14 +20,12 @@ Class = require 'class'
 require 'Cow'
 -- add Moon class file
 require 'Moon'
+-- add a Pipe class
+require 'Pipe'
 -- setup the virtual resolution
 VIRTUAL_WIDTH = 512
 VIRTUAL_HEIGHT = 288
---[[
-    to counter act on the gravity that has been already taken into account there
-    need to be some jump velocity applied but at the same time later gravity
-    still should be applied as well to the cow model 
-]]
+
 -- define localy used variables for the background and ground images
 local background = love.graphics.newImage('background_night_no_moon.png')
 -- define the variable to track the scroll of images
@@ -48,13 +46,6 @@ local GROUND_LOOPING_POINT = 559
 -- create a local variable for cow
 local cow = Cow()
 local moon = Moon()
-
---[[
-    to make the main file as compact and organised as possiblle it's a good
-    practice to shift some of the functions and properties of elements of
-    the game to the elemnt class - in this case the input handling will be
-    delegated to the cow class
-]]
 
 -- load function - runs 1st in running of the game
 function love.load()
