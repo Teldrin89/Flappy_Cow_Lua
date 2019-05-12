@@ -188,6 +188,8 @@ function love.draw()
         has to be set a layer order - that's why they have to be drawn in this
         place: after bacground but before ground
     ]]
+    -- draw the moon on the background sky - shifted back before the pipe
+    moon:render()
     -- use the same iteration of key-value pair for updated table
     for k, pair in pairs(pipePairs) do
         pair:render()
@@ -196,8 +198,6 @@ function love.draw()
     love.graphics.draw(ground, -groundScroll, VIRTUAL_HEIGHT - 32)
     -- draw the cow using the class function
     cow:render()
-    -- draw the moon on the background sky
-    moon:render()
     -- end push rendering
     push:finish()
 end
