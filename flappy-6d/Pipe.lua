@@ -14,7 +14,7 @@ function Pipe:init()
     -- set the pipe over the right edge
     self.x = VIRTUAL_WIDTH
     -- set the pipe at random heights of the bottom side
-    self.y = math.random(VIRTUAL_HEIGHT/3.35, VIRTUAL_HEIGHT - 60)
+    self.y = math.random(VIRTUAL_HEIGHT/3.35, VIRTUAL_HEIGHT - 65)
     -- set width as a width of a pipe
     self.width = PIPE_IMAGE:getWidth()
 end

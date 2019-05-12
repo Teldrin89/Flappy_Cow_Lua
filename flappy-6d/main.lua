@@ -22,6 +22,8 @@ require 'Cow'
 require 'Moon'
 -- add a Pipe class
 require 'Pipe'
+-- require a composite class - pipe pair
+require 'PipePair'
 -- setup the virtual resolution
 VIRTUAL_WIDTH = 512
 VIRTUAL_HEIGHT = 288
@@ -47,11 +49,16 @@ local GROUND_LOOPING_POINT = 559
 local cow = Cow()
 -- added local variable for moon sprite
 local moon = Moon()
--- add local table for all pipes
-local pipes = {}
+-- substitute local table of pipes with the one for pairs of pipes
+local pipePairs = {}
 -- add timer variable to determine when to spawn next pipe
 local spawnTimer = 0
-
+--[[
+    add aditional variable that will keep track of the top end Y value so that
+    the gap can bee similar with the next pipe pair and that will result in
+    smooth transition between next pipes
+]]
+local lastY = -PIPE_HEIGHT + math.random(80) + 20
 -- load function - runs 1st in running of the game
 function love.load()
     -- adjust the graphics setting filters for better pixel art
@@ -121,10 +128,19 @@ function love.update(dt)
     -- check if the spawn timer is grater than set value (eg. 2) to add new pipe
     if spawnTimer > 2 then
         --[[
-            to add new pipe insert it in the table set up earlier for all pipes
-            ("pipes") and insert an object ("Pipe()"), indexing start at 1
+            introduction of additional variable "y" that will shift the gap
+            between pipes that will be no higher than 10px below the top edge
+            and no lower than a gap length (90)
         ]]
-        table.insert(pipes, Pipe())
+        local y = math.max(-PIPE_HEIGHT + 10, math.min(lastY + 
+            math.random(-20,20), VIRTUAL_HEIGHT-90-PIPE_HEIGHT))
+        lastY = y
+        --[[
+            instead of workin on individual pipes now the spawn will be for
+            pair of pipes, hence use of pair of pipes table with "y" value tha
+            is where the gap starts
+        ]]
+        table.insert(pipePairs, PipePair(y))
         -- reset the spawnTimer to 0 after adding a single pipe
         spawnTimer = 0
     end
@@ -132,21 +148,29 @@ function love.update(dt)
     -- run update function in cow class
     cow:update(dt)
 
-    -- iterate over a table with key-value pairs
-    for k, pipe in pairs(pipes) do
+    -- iterate over a table with key-value pairs for updated table
+    for k, pair in pairs(pipePairs) do
         -- update for each pipe - this will have the effect of scrolling
-        pipe:update(dt)
+        pair:update(dt)
+    end
+    --[[
+        a second loop for all pipe pairs that is required for removal of pipes
+        because in previous loop with the update function it would result in
+        skipping of every second pipe pair
+    ]]
+    for k, pair in pairs(pipePairs) do
         --[[ 
             remove the pipe once it will be over the left side of the screen,
             check not against 0 (as then it would remove it before it 
             completely gone trhough screen) but against it's width
         ]]
-        if pipe.x < -pipe.width then
+        -- shifted remove condition to a function in pair class
+        if pair.remove then
             --[[
                 the table.remove function to remove said pipe with the key value
                 set in the loop ("k")
             ]]
-            table.remove(pipes, k)
+            table.remove(pipePairs, k)
         end
     end
     -- reset the keyPressed table
@@ -164,9 +188,9 @@ function love.draw()
         has to be set a layer order - that's why they have to be drawn in this
         place: after bacground but before ground
     ]]
-    -- use the same iteration of key-value pair table
-    for k, pipe in pairs(pipes) do
-        pipe:render()
+    -- use the same iteration of key-value pair for updated table
+    for k, pair in pairs(pipePairs) do
+        pair:render()
     end
     -- draw ground image at the bottom - the size of the ground image
     love.graphics.draw(ground, -groundScroll, VIRTUAL_HEIGHT - 32)
