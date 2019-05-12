@@ -7,8 +7,8 @@ Pipe = Class{}
     the screen - hence do it before init function
 ]] 
 local PIPE_IMAGE = love.graphics.newImage('pipe_yellow.png')
--- add a value for pipe scrolling - arbitrary, updated sign
-local PIPE_SCROLL = 60
+-- add a value for pipe scrolling - arbitrary, updated sign, made global
+PIPE_SCROLL = 60
 -- set the global values of pipe height and width
 PIPE_HEIGHT = 288
 PIPE_WIDTH = 70

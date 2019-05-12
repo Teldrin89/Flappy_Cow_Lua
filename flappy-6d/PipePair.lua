@@ -17,7 +17,7 @@ function PipePair:init(y)
             both upper and lower pipe use the updated Pipe.lua class that now
             take argument of the pipe location
         ]]
-        ['upper'] = Pipe('top', self.y)
+        ['upper'] = Pipe('top', self.y),
         -- the lower pipe is shifted by the pipe height and gap
         ['lower'] = Pipe('bottom', self.y + PIPE_HEIGHT + GAP_HEIGHT)
     }
@@ -26,6 +26,7 @@ function PipePair:init(y)
         is set to "true"
     ]]
     self.remove = false
+end
 
 -- update function for pair of pipes
 function PipePair:update(dt)
@@ -35,7 +36,7 @@ function PipePair:update(dt)
     ]]
     if self.x > -PIPE_WIDTH then
         -- update the self.x position with speed and time
-        self.x = self.x - PIPE_SPEED * dt
+        self.x = self.x - PIPE_SCROLL * dt
         -- use the calculated self.x and apply to both lower and upper pipes
         self.pipes['lower'].x = self.x
         self.pipes['upper'].x = self.x
@@ -43,6 +44,7 @@ function PipePair:update(dt)
         -- set the remove atribute to true if pipes are over the left side
         self.remove = true
     end
+end
 
 -- render function for pipe pair
 function PipePair:render()
