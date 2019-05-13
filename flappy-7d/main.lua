@@ -59,6 +59,12 @@ local spawnTimer = 0
     smooth transition between next pipes
 ]]
 local lastY = -PIPE_HEIGHT + math.random(80) + 20
+--[[
+    in order to detect the collision there is a need for some variable that
+    will be set to true as default and if there is a collision it will change
+    to false
+]]
+local scrolling = true
 -- load function - runs 1st in running of the game
 function love.load()
     -- adjust the graphics setting filters for better pixel art
@@ -109,68 +115,81 @@ end
 
 -- love update function
 function love.update(dt)
-    -- apply the speed of image scrolling with dt
-    backgroundScroll = (backgroundScroll + BACKGROUND_SCROLL_SPEED * dt)
-        % BACKGROUND_LOOPING_POINT
-    --[[ 
-        "%" defines the modulo operation that will prevent from sudden cuts in 
-        image scrolling
-    ]]
-        groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt)
-        % GROUND_LOOPING_POINT
-    --[[
-        to simulate gravity in 2D game apply an ever increasing speed to the cow
-        object (as in real life it also has acceleration)
-        this will be done with update function of cow class
-    ]]
-    -- handle the increase of timer value
-    spawnTimer = spawnTimer + dt
-    -- check if the spawn timer is grater than set value (eg. 2) to add new pipe
-    if spawnTimer > 2 then
-        --[[
-            introduction of additional variable "y" that will shift the gap
-            between pipes that will be no higher than 10px below the top edge
-            and no lower than a gap length (90)
-        ]]
-        local y = math.max(-PIPE_HEIGHT + 10, math.min(lastY + 
-            math.random(-20,20), VIRTUAL_HEIGHT-90-PIPE_HEIGHT))
-        lastY = y
-        --[[
-            instead of workin on individual pipes now the spawn will be for
-            pair of pipes, hence use of pair of pipes table with "y" value tha
-            is where the gap starts
-        ]]
-        table.insert(pipePairs, PipePair(y))
-        -- reset the spawnTimer to 0 after adding a single pipe
-        spawnTimer = 0
-    end
-
-    -- run update function in cow class
-    cow:update(dt)
-
-    -- iterate over a table with key-value pairs for updated table
-    for k, pair in pairs(pipePairs) do
-        -- update for each pipe - this will have the effect of scrolling
-        pair:update(dt)
-    end
-    --[[
-        a second loop for all pipe pairs that is required for removal of pipes
-        because in previous loop with the update function it would result in
-        skipping of every second pipe pair
-    ]]
-    for k, pair in pairs(pipePairs) do
+    -- add the if condition for scrolling check to run update function
+    if scrolling then
+        -- apply the speed of image scrolling with dt
+        backgroundScroll = (backgroundScroll + BACKGROUND_SCROLL_SPEED * dt)
+            % BACKGROUND_LOOPING_POINT
         --[[ 
-            remove the pipe once it will be over the left side of the screen,
-            check not against 0 (as then it would remove it before it 
-            completely gone trhough screen) but against it's width
+            "%" defines the modulo operation that will prevent from sudden cuts in 
+            image scrolling
         ]]
-        -- shifted remove condition to a function in pair class
-        if pair.remove then
+            groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt)
+            % GROUND_LOOPING_POINT
+        --[[
+            to simulate gravity in 2D game apply an ever increasing speed to the cow
+            object (as in real life it also has acceleration)
+            this will be done with update function of cow class
+        ]]
+        -- handle the increase of timer value
+        spawnTimer = spawnTimer + dt
+        -- check if the spawn timer is grater than set value (eg. 2) to add new pipe
+        if spawnTimer > 2 then
             --[[
-                the table.remove function to remove said pipe with the key value
-                set in the loop ("k")
+                introduction of additional variable "y" that will shift the gap
+                between pipes that will be no higher than 10px below the top edge
+                and no lower than a gap length (90)
             ]]
-            table.remove(pipePairs, k)
+            local y = math.max(-PIPE_HEIGHT + 10, math.min(lastY + 
+                math.random(-20,20), VIRTUAL_HEIGHT-90-PIPE_HEIGHT))
+            lastY = y
+            --[[
+                instead of workin on individual pipes now the spawn will be for
+                pair of pipes, hence use of pair of pipes table with "y" value tha
+                is where the gap starts
+            ]]
+            table.insert(pipePairs, PipePair(y))
+            -- reset the spawnTimer to 0 after adding a single pipe
+            spawnTimer = 0
+        end
+
+        -- run update function in cow class
+        cow:update(dt)
+
+        -- iterate over a table with key-value pairs for updated table
+        for k, pair in pairs(pipePairs) do
+            -- update for each pipe - this will have the effect of scrolling
+            pair:update(dt)
+            --[[
+                nested loop for all pipes in pipe pairs to check if any (lower
+                or upper) pipe has a collision detected
+            ]]
+            for l, pipe in pairs(pair.pipes) do
+                if bird:collides(pipe) then
+                    -- set scrolling to false if collision is detected
+                    scrolling = false
+                end
+            end
+        end
+        --[[
+            a second loop for all pipe pairs that is required for removal of pipes
+            because in previous loop with the update function it would result in
+            skipping of every second pipe pair
+        ]]
+        for k, pair in pairs(pipePairs) do
+            --[[ 
+                remove the pipe once it will be over the left side of the screen,
+                check not against 0 (as then it would remove it before it 
+                completely gone trhough screen) but against it's width
+            ]]
+            -- shifted remove condition to a function in pair class
+            if pair.remove then
+                --[[
+                    the table.remove function to remove said pipe with the key value
+                    set in the loop ("k")
+                ]]
+                table.remove(pipePairs, k)
+            end
         end
     end
     -- reset the keyPressed table
