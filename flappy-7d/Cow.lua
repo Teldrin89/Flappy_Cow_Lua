@@ -18,7 +18,25 @@ function Cow:init()
     -- init the "y" velocity of a cow
     self.dy = 0
 end
-
+--[[
+    adding the AABB collision detection function that is then referenced in main
+    file, takes pipe as parameter
+]]
+function Cow:collides(pipe)
+    --[[
+        to add make the game less "punishing" for players there are 2 offset
+        values added in both Y and X direction (2 and 4)
+    ]]
+    if (self.x + 2) + (self.width - 4) >= pipe.x and 
+    self.x + 2 <=pipe.x + PIPE_WIDTH then
+        if (self.y + 2) + (self.height - 4) >= pipe.y and 
+        self.y + 2 <= pipe.y + PIPE_HEIGHT then
+            -- if the collision is detected function returns true
+            return true
+        end
+    end
+    -- if no collision the return false
+    return false
 -- add an update function - refered to in main.lua
 function Cow:update(dt)
     -- apply gravity as a velocity increas in "y" direction
