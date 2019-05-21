@@ -165,7 +165,7 @@ function love.update(dt)
                 or upper) pipe has a collision detected
             ]]
             for l, pipe in pairs(pair.pipes) do
-                if bird:collides(pipe) then
+                if cow:collides(pipe) then
                     -- set scrolling to false if collision is detected
                     scrolling = false
                 end
