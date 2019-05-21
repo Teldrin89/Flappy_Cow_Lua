@@ -37,6 +37,8 @@ function Cow:collides(pipe)
     end
     -- if no collision the return false
     return false
+end
+
 -- add an update function - refered to in main.lua
 function Cow:update(dt)
     -- apply gravity as a velocity increas in "y" direction
