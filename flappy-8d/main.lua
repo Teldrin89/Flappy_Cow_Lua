@@ -8,6 +8,12 @@
 
 --                      Game 8 updated - the game state update
 
+--[[
+    the state game update will divide the game into several states: starting on 
+    the title screen state the game will proceed according to the game state 
+    diagram (to the countdown state first and then to play state that then can go
+    back to coundtown)
+]]
 -- setup the game window
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
@@ -24,6 +30,13 @@ require 'Moon'
 require 'Pipe'
 -- require a composite class - pipe pair
 require 'PipePair'
+-- additional module with state machine library
+require 'StateMachine'
+-- additional modules for each of the game states - in seperate folder
+require 'states/BaseState'
+require 'states/PlayState'
+require 'states/TitleScreenState'
+
 -- setup the virtual resolution
 VIRTUAL_WIDTH = 512
 VIRTUAL_HEIGHT = 288
@@ -71,6 +84,13 @@ function love.load()
     love.graphics.setDefaultFilter('nearest', 'nearest')
     -- set the window name
     love.window.setTitle('Flappy Cow')
+    -- initialize external tex fonts for with different formats and several sizes
+    smallFont = love.graphics.newFont('font.ttf', 8)
+    mediumFont = love.graphics.newFont('flappy.ttf', 14)
+    flappyFont = love.graphics.newFont('flappy.ttf', 28)
+    hugeFont = love.graphics.newFont('flappy.ttf', 56)
+    love.graphics.setFont(flappyFont)
+
     -- setup the virtual resolution with push
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT,{
         vsync = true,
@@ -78,6 +98,20 @@ function love.load()
         resizable = true
     })
 
+    --[[
+        initialize game state with state-returnin function, the "g" in front of 
+        some of the variables below indicates the global variable
+    ]] 
+    gStateMachine = StateMachine {
+        --[[
+            from StateMachine class use some functions based on the key-value 
+            tables that will return some states
+        ]] 
+        ['title'] = function() return TitleScreenState() end,
+        ['play'] = function() return PlayState() end,
+    }
+    -- setting up the state with change function from StateMachine class
+    gStateMachine: change('title')
     -- add the empty table of keypressed to the load function
     love.keyboard.keysPressed = {}
 end
@@ -115,83 +149,24 @@ end
 
 -- love update function
 function love.update(dt)
-    -- add the if condition for scrolling check to run update function
-    if scrolling then
-        -- apply the speed of image scrolling with dt
-        backgroundScroll = (backgroundScroll + BACKGROUND_SCROLL_SPEED * dt)
-            % BACKGROUND_LOOPING_POINT
-        --[[ 
-            "%" defines the modulo operation that will prevent from sudden cuts in 
-            image scrolling
-        ]]
-            groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt)
-            % GROUND_LOOPING_POINT
-        --[[
-            to simulate gravity in 2D game apply an ever increasing speed to the cow
-            object (as in real life it also has acceleration)
-            this will be done with update function of cow class
-        ]]
-        -- handle the increase of timer value
-        spawnTimer = spawnTimer + dt
-        -- check if the spawn timer is grater than set value (eg. 2) to add new pipe
-        if spawnTimer > 2 then
-            --[[
-                introduction of additional variable "y" that will shift the gap
-                between pipes that will be no higher than 10px below the top edge
-                and no lower than a gap length (90)
-            ]]
-            local y = math.max(-PIPE_HEIGHT + 10, math.min(lastY + 
-                math.random(-20,20), VIRTUAL_HEIGHT-90-PIPE_HEIGHT))
-            lastY = y
-            --[[
-                instead of workin on individual pipes now the spawn will be for
-                pair of pipes, hence use of pair of pipes table with "y" value tha
-                is where the gap starts
-            ]]
-            table.insert(pipePairs, PipePair(y))
-            -- reset the spawnTimer to 0 after adding a single pipe
-            spawnTimer = 0
-        end
+    --[[
+        update function has been exported to the game state library - the only
+        part that was left in main is related to background and ground scrolling
+        as it is going to be present all the time
+    ]]
+    backgroundScroll = (backgroundScroll + BACKGROUND_SCROLL_SPEED * dt)
+        % BACKGROUND_LOOPING_POINT
+    
+    --[[ 
+        "%" defines the modulo operation that will prevent from sudden cuts in 
+        image scrolling
+    ]]
+    groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt)
+        % GROUND_LOOPING_POINT
+    
+    -- the update part of this function is called from game state module
+    gStateMachine:update(dt)
 
-        -- run update function in cow class
-        cow:update(dt)
-
-        -- iterate over a table with key-value pairs for updated table
-        for k, pair in pairs(pipePairs) do
-            -- update for each pipe - this will have the effect of scrolling
-            pair:update(dt)
-            --[[
-                nested loop for all pipes in pipe pairs to check if any (lower
-                or upper) pipe has a collision detected
-            ]]
-            for l, pipe in pairs(pair.pipes) do
-                if cow:collides(pipe) then
-                    -- set scrolling to false if collision is detected
-                    scrolling = false
-                end
-            end
-        end
-        --[[
-            a second loop for all pipe pairs that is required for removal of pipes
-            because in previous loop with the update function it would result in
-            skipping of every second pipe pair
-        ]]
-        for k, pair in pairs(pipePairs) do
-            --[[ 
-                remove the pipe once it will be over the left side of the screen,
-                check not against 0 (as then it would remove it before it 
-                completely gone trhough screen) but against it's width
-            ]]
-            -- shifted remove condition to a function in pair class
-            if pair.remove then
-                --[[
-                    the table.remove function to remove said pipe with the key value
-                    set in the loop ("k")
-                ]]
-                table.remove(pipePairs, k)
-            end
-        end
-    end
     -- reset the keyPressed table
     love.keyboard.keysPressed = {}
 end
@@ -200,23 +175,16 @@ end
 function love.draw()
     -- start the push rendering
     push:start()
+    
     -- update the draw function with scroll position that will be updated
     love.graphics.draw(background, -backgroundScroll, 0)
-    --[[
-        to have the pipes drawn as if they are sticking out of the ground there
-        has to be set a layer order - that's why they have to be drawn in this
-        place: after bacground but before ground
-    ]]
     -- draw the moon on the background sky - shifted back before the pipe
     moon:render()
-    -- use the same iteration of key-value pair for updated table
-    for k, pair in pairs(pipePairs) do
-        pair:render()
-    end
+    -- the rendering of pipes and cow is taken care in state module
+    gStateMachine:render()
     -- draw ground image at the bottom - the size of the ground image
     love.graphics.draw(ground, -groundScroll, VIRTUAL_HEIGHT - 32)
-    -- draw the cow using the class function
-    cow:render()
+    
     -- end push rendering
     push:finish()
 end
