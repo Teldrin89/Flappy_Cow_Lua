@@ -167,7 +167,6 @@ function love.update(dt)
             for l, pipe in pairs(pair.pipes) do
                 if cow:collides(pipe) then
                     -- set scrolling to false if collision is detected
-                    -- TODO: finished on end of day7 update
                     scrolling = false
                 end
             end
