@@ -6,7 +6,7 @@
 
 -- New take on the FLAPPY BIRD game
 
---                      Game 7 updated - the collision update
+--                      Game 8 updated - the game state update
 
 -- setup the game window
 WINDOW_WIDTH = 1280
