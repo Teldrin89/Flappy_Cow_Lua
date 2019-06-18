@@ -17,24 +17,28 @@ function StateMachine:init(states)
         exit = function() end
     }
     --[[
-        if states is set to wrong value then set to empty table - 
-        function that returns states
+        initiate a variable even if there is no value - states
     ]] 
     self.states = states or {}
     self.current = self.empty
 end
--- change function
+-- change function - takse a state name and parameters
 function StateMachine:change(stateName, enterParams)
     assert(self.states[stateName])
+    -- once you want to change state, call the exit function from current state
     self.current:exit()
+    -- set new current state
     self.current = self.states[stateName]()
+    -- enter new state with additional enter parameters
     self.current:enter(enterParams)
 end
--- update function
+-- update function - as it was update function in main file with "dt" input
 function StateMachine:update(dt)
+    -- update the current state
     self.current:update(dt)
 end
--- render function
+-- render function - as it was previously in main
 function StateMachine:render()
+    -- render the current state
     self.current:render()
 end
