@@ -101,16 +101,22 @@ function PlayState:update(dt)
     for k, pair in pairs(self.pipePairs) do
         for l, pipe in pairs(pair.pipes) do
             if self.cow:collides(pipe) then
-                -- change the state to title state in case of collision
-                gStateMachine:change('title')
+                -- change the state to score state in case of collision
+                gStateMachine:change('score' {
+                    -- pass the score value
+                    score = self.score
+                })
             end
         end
     end
 
     -- additional check if cow collides with the ground
     if self.cow.y > VIRTUAL_HEIGHT - 15 then
-        -- also change to title state if cow falls to the ground
-        gStateMachine:change('title')
+        -- also change to score state if cow falls to the ground
+        gStateMachine:change('score', {
+            -- pass the score value
+            score = self.score
+        })
     end
 end
 
@@ -120,6 +126,11 @@ function PlayState:render()
     for k, pair in pairs(self.pipePairs) do
         pair:render()
     end
+
+    -- set the score font and printout the score value in top right corner
+    love.graphics.setFont(flappyFont)
+    love.graphics.print('Score: ' .. tostring(self.score), 8, 8)
+
     -- render the cow
     self.cow:render()
 end
