@@ -30,6 +30,9 @@ function PlayState:init()
     -- set initial timer
     self.timer = 0
 
+    -- add keeping track of score, init with 0
+    self.score = 0
+
     -- init last recorded "Y" value for a gap placement to base other pipe pair
     self.lastY = -PIPE_HEIGHT + math.random(80) + 20
 end
@@ -61,6 +64,19 @@ function PlayState:update(dt)
     
     -- loop for every pair of pipes
     for k, pair in pairs(self.pipePairs) do
+        --[[
+            condition check and score update - if the pipe has gone past the cow
+            to the left all the way, be sure to ignore it once the point has been
+            given
+        ]]
+        -- check the pair scored condition -> continue if false
+        if not pair.scored then
+            -- check if cow passed the pipe pair width
+            if pair.x + PIPE_WIDTH < self.cow.x then
+                -- increment the score
+                self.score = self.score + 1
+                -- change scored condition to true to avoid extra points
+                pair.scored = true
         -- update position of the pipe pair
         pair:update(dt)
     end
