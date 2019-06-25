@@ -33,6 +33,7 @@ require 'StateMachine'
 -- additional modules for each of the game states - in seperate folder
 require 'states/BaseState'
 require 'states/PlayState'
+require 'states/ScoreState'
 require 'states/TitleScreenState'
 
 -- setup the virtual resolution
@@ -107,6 +108,7 @@ function love.load()
         ]] 
         ['title'] = function() return TitleScreenState() end,
         ['play'] = function() return PlayState() end,
+        ['score'] = function() return ScoreState() end
     }
     -- setting up the state with change function from StateMachine class
     gStateMachine: change('title')
