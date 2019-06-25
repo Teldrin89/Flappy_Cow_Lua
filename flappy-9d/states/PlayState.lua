@@ -102,7 +102,7 @@ function PlayState:update(dt)
         for l, pipe in pairs(pair.pipes) do
             if self.cow:collides(pipe) then
                 -- change the state to score state in case of collision
-                gStateMachine:change('score' {
+                gStateMachine:change('score', {
                     -- pass the score value
                     score = self.score
                 })
