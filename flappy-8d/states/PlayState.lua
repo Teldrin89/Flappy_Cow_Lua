@@ -12,7 +12,7 @@ PlayState = Class{__includes=BaseState}
 
 -- moved most of the functions from main to Play State class
 
--- set dimensions to pipes and cow
+-- set dimensions to pipes and cow - the same as dimensions of sprites
 
 PIPE_SPEED = 60
 PIPE_WIDTH = 70
@@ -49,9 +49,12 @@ function PlayState:update(dt)
         local y = math.max(-PIPE_HEIGHT + 10,
             math.min(self.lastY + math.random(-20,20), VIRTUAL_HEIGHT - 90 - PIPE_HEIGHT))
         
-            -- set lastY with new y value
+        -- set lastY with new y value
         self.lastY = y
 
+        -- add a new pipe pair at the end of the screen at new "Y"
+        table.insert(self.pipePairs, PipePair(y))
+        
         -- reset timer
         self.timer = 0
     end
@@ -81,7 +84,7 @@ function PlayState:update(dt)
     -- simple AABB collision btween cow and all pipes
     for k, pair in pairs(self.pipePairs) do
         for l, pipe in pairs(pair.pipes) do
-            if self.bird:collides(pipe) then
+            if self.cow:collides(pipe) then
                 -- change the state to title state in case of collision
                 gStateMachine:change('title')
             end

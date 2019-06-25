@@ -10,7 +10,8 @@ TitleScreenState = Class {__includes = BaseState}
 
 -- update function with keyboard pressed functions to start the game
 function TitleScreenState:update(dt)
-    if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return')
+    if love.keyboard.wasPressed('enter') or
+     love.keyboard.wasPressed('return') then
         gStateMachine:change('play')
     end
 end
