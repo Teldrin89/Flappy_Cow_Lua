@@ -26,6 +26,9 @@ function PipePair:init(y)
         is set to "true"
     ]]
     self.remove = false
+
+    -- additional variable to determine if score shall be increased
+    self.scored = false
 end
 
 -- update function for pair of pipes
