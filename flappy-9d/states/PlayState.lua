@@ -14,7 +14,7 @@ PlayState = Class{__includes=BaseState}
 
 -- set dimensions to pipes and cow - the same as dimensions of sprites
 
-PIPE_SPEED = 60
+PIPE_SCROLL = 60
 PIPE_WIDTH = 70
 PIPE_HEIGHT = 288
 
@@ -77,6 +77,8 @@ function PlayState:update(dt)
                 self.score = self.score + 1
                 -- change scored condition to true to avoid extra points
                 pair.scored = true
+            end
+        end
         -- update position of the pipe pair
         pair:update(dt)
     end
@@ -129,7 +131,7 @@ function PlayState:render()
 
     -- set the score font and printout the score value in top right corner
     love.graphics.setFont(flappyFont)
-    love.graphics.print('Score: ' .. tostring(self.score), 8, 8)
+    love.graphics.print('Score: ' .. tostring(self.score), 48, 8)
 
     -- render the cow
     self.cow:render()
