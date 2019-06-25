@@ -95,6 +95,12 @@ function PlayState:update(dt)
     end
 end
 
-
-
-
+-- render function
+function PlayState:render()
+    -- render pipe pairs
+    for k, pair in pairs(self.pipePairs) do
+        pair:render()
+    end
+    -- render the cow
+    self.cow:render()
+end
