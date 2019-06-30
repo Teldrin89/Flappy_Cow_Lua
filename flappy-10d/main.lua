@@ -9,8 +9,9 @@
 --                      Game 10 updated - the countdown update
 
 --[[
-    the game score will be added to the play state and additional information
-    will be displayed to inform the player about their score
+    in order to make users get ready for start of the game there will be added a
+    new state - "countdown" - that will count to 3 (starting from 3) before 
+    starting the game
 ]]
 -- setup the game window
 WINDOW_WIDTH = 1280
@@ -32,6 +33,7 @@ require 'PipePair'
 require 'StateMachine'
 -- additional modules for each of the game states - in seperate folder
 require 'states/BaseState'
+require 'states/CountdownState'
 require 'states/PlayState'
 require 'states/ScoreState'
 require 'states/TitleScreenState'
@@ -107,6 +109,7 @@ function love.load()
             tables that will return some states
         ]] 
         ['title'] = function() return TitleScreenState() end,
+        ['countdown'] = function() return CountdownState() end,
         ['play'] = function() return PlayState() end,
         ['score'] = function() return ScoreState() end
     }
