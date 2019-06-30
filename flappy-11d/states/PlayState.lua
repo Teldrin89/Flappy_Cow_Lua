@@ -77,6 +77,8 @@ function PlayState:update(dt)
                 self.score = self.score + 1
                 -- change scored condition to true to avoid extra points
                 pair.scored = true
+                -- add the score sound effect
+                sounds['score']:play()
             end
         end
         -- update position of the pipe pair
@@ -103,6 +105,9 @@ function PlayState:update(dt)
     for k, pair in pairs(self.pipePairs) do
         for l, pipe in pairs(pair.pipes) do
             if self.cow:collides(pipe) then
+                -- add the sound effects on collision, layering 2 on top
+                sounds['explosion']:play()
+                sounds['hurt']:play()
                 -- change the state to score state in case of collision
                 gStateMachine:change('score', {
                     -- pass the score value
@@ -114,6 +119,9 @@ function PlayState:update(dt)
 
     -- additional check if cow collides with the ground
     if self.cow.y > VIRTUAL_HEIGHT - 15 then
+        -- add the sound effects on collision with bottom, layering 2 on top
+        sounds['explosion']:play()
+        sounds['hurt']:play()
         -- also change to score state if cow falls to the ground
         gStateMachine:change('score', {
             -- pass the score value
