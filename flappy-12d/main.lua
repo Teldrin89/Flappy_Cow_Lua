@@ -34,6 +34,7 @@ local pipePairs = {}
 local spawnTimer = 0
 local lastY = -PIPE_HEIGHT + math.random(80) + 20
 local scrolling = true
+
 function love.load()
     love.graphics.setDefaultFilter('nearest', 'nearest')
     love.window.setTitle('Flappy Cow')
