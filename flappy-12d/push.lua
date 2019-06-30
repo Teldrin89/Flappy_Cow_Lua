@@ -5,13 +5,16 @@
 -- The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 -- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-local love11 = love.getVersion() == 11
-local getDPI = love11 and love.window.getDPIScale or love.window.getPixelScale
-local windowUpdateMode = love11 and love.window.updateMode or function(width, height, settings)
-  local _, _, flags = love.window.getMode()
-  for k, v in pairs(settings) do flags[k] = v end
-  love.window.setMode(width, height, flags)
-end
+-- add the configuration class for small updates in orded to make the js
+conf = require 'conf'
+
+local love11 = love.getVersion() --== 11
+local getDPI = 1 and love11 and love.window.getDPIScale or love.window.getPixelScale
+--local windowUpdateMode = love11 and love.window.updateMode or function(width, height, settings)
+  --local _, _, flags = love.window.getMode()
+  --for k, v in pairs(settings) do flags[k] = v end
+  -- love.window.setMode(width, height, flags)
+--end
 
 local push = {
   
@@ -43,13 +46,13 @@ function push:setupScreen(WWIDTH, WHEIGHT, RWIDTH, RHEIGHT, settings)
 
   self:applySettings(self.defaults) --set defaults first
   self:applySettings(settings) --then fill with custom settings
-  
+  --[[
   windowUpdateMode(self._RWIDTH, self._RHEIGHT, {
     fullscreen = self._fullscreen,
     resizable = self._resizable,
     highdpi = self._highdpi
   })
-
+  ]]
   self:initValues()
 
   if self._canvas then
@@ -107,8 +110,9 @@ function push:setShader(name, shader)
 end
 
 function push:initValues()
-  self._PSCALE = (not love11 and self._highdpi) and getDPI() or 1
-  
+  --self._PSCALE = (not love11 and self._highdpi) and getDPI() or 1
+  self._PSCALE = (not love11 and self._highdpi) and 1 or 1
+
   self._SCALE = {
     x = self._RWIDTH/self._WWIDTH * self._PSCALE,
     y = self._RHEIGHT/self._WHEIGHT * self._PSCALE
