@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Pong</title>
+	<title>LÖVE Game</title>
 	<style type="text/css">
 html, body
 {
@@ -21,17 +21,6 @@ html, body
 	border-bottom: 21px solid transparent;
 	box-sizing: border-box;
 }
-#title
-{
-	background-color: #ea316e;
-	margin: 9px;
-	padding: .8em;
-	border: 1px solid black;
-	border-radius: 10px;
-	box-shadow: 3px 3px 0 0 rgba(0,0,0,0.3);
-	text-align: center;
-	color: #f5f5f5;
-}
 #main
 {
 	background-color: #b1e3fa;
@@ -41,8 +30,6 @@ html, body
 	border-radius: 10px;
 	box-shadow: 3px 3px 0 0 rgba(0,0,0,0.3);
 }
-#main a { color: #526ffc; }
-#main a:hover, #main a:active { color: #f2f2f2; background: #ea316e; }
 #footer
 {
 	background-color: #b1e3fa;
@@ -65,13 +52,11 @@ html, body
 </head>
 <body>
 <div id="wrapper">
-	<h1 id="title">Pong</h1>
 	<div id="main">
-		<center style="margin-bottom:10px">Lua version of Pong game deployed to web</center>
 		<center><canvas id="canvas" width="1280" height="720" style="max-width:100%;background:#000;vertical-align:middle"></canvas></center>
 	</div>
 </div>
-<div id="footer">&copy; Lukasz Cieslak &middot; Made using the <a href="https://love2d.org/" target="_blank">LÖVE Framework</a> (<a href="https://bitbucket.org/rude/love/raw/default/license.txt" target="_blank">License</a>) &middot; Packaged using <a href="https://schellingb.github.io/LoveWebBuilder/" target="_blank">LÖVE Web Builder</a></div>
+<div id="footer">Made using the <a href="https://love2d.org/" target="_blank">LÖVE Framework</a> (<a href="https://bitbucket.org/rude/love/raw/default/license.txt" target="_blank">License</a>) &middot; Packaged using <a href="https://schellingb.github.io/LoveWebBuilder/" target="_blank">LÖVE Web Builder</a></div>
 <script type="text/javascript">(function(){
 var TXT =
 {
@@ -112,9 +97,9 @@ var DoLoad = function()
 {
 	Msg(TXT.LOAD);
 	window.onerror = function(e,u,l) { Fail(e+'<br>('+u+':'+l+')'); };
-	Module = { TOTAL_MEMORY: 1024*1024*24, TOTAL_STACK: 1024*1024*2, currentScriptUrl: '-', preInit: DoExecute };
+	Module = { TOTAL_MEMORY: 1024*1024*26, TOTAL_STACK: 1024*1024*2, currentScriptUrl: '-', preInit: DoExecute };
 	var s = document.createElement('script'), d = document.documentElement;
-	s.src = 'Pong_Game.js';
+	s.src = 'Flappy_Game.js';
 	s.async = true;
 	s.onerror = function(e) { d.removeChild(s); Msg(TXT.DLERROR); canvas.disabled = false; };
 	d.appendChild(s);
