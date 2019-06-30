@@ -44,13 +44,13 @@ function love.load()
     love.graphics.setFont(flappyFont)
 
     sounds = {
-        ['jump'] = love.audio.newSource('sounds/maybe_jump.wav', 'static'),
-        ['explosion'] = love.audio.newSource('sounds/maybe_expl.wav', 'static'),
-        ['hurt'] = love.audio.newSource('sounds/maybe_hurt.wav', 'static'),
-        ['score'] = love.audio.newSource('sounds/maybe_score.wav', 'static'),
+        ['jump'] = love.audio.newSource('maybe_jump.wav', 'static'),
+        ['explosion'] = love.audio.newSource('maybe_expl.wav', 'static'),
+        ['hurt'] = love.audio.newSource('maybe_hurt.wav', 'static'),
+        ['score'] = love.audio.newSource('maybe_score.wav', 'static'),
 
         -- https://freesound.org/people/vikuserro/sounds/265549/
-        ['music'] = love.audio.newSource('sounds/maybe_flappy_theme_3.mp3', 'static')
+        ['music'] = love.audio.newSource('maybe_flappy_theme_3.mp3', 'static')
     }
 
     sounds['music']:setLooping(true)
