@@ -53,6 +53,8 @@ function Cow:update(dt)
     if love.keyboard.wasPressed('space') then
         -- applying the jump as a velocity for the cow sprite in opposite dir.
         self.dy = -JUMP
+        -- add sound efect to jump
+        sounds['jump']:play()
     end
 
 end
