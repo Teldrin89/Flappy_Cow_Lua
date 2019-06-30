@@ -92,6 +92,21 @@ function love.load()
     hugeFont = love.graphics.newFont('flappy.ttf', 56)
     love.graphics.setFont(flappyFont)
 
+    -- initialize table of sounds
+    sounds = {
+        ['jump'] = love.audio.newSource('sounds/maybe_jump.wav', 'static'),
+        ['explosion'] = love.audio.newSource('sounds/maybe_expl.wav', 'static'),
+        ['hurt'] = love.audio.newSource('sounds/maybe_hurt.wav', 'static'),
+        ['score'] = love.audio.newSource('sounds/maybe_score.wav', 'static'),
+
+        -- https://freesound.org/people/vikuserro/sounds/265549/
+        ['music'] = love.audio.newSource('sounds/maybe_flappy_theme_3.mp3', 'static')
+    }
+
+    -- start the theme music
+    sounds['music']:setLooping(true)
+    sounds['music']:play()
+
     -- setup the virtual resolution with push
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT,{
         vsync = true,
