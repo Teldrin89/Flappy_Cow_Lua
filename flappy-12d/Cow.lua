@@ -3,8 +3,8 @@ Cow = Class{}
 -- additional constant deffinitions for cow class
 -- gravity value set to 20, is completely arbitrary value (found with tuning)
 local GRAVITY = 20
--- set jump value to 5 (arbitrary value)
-local JUMP = 5
+-- set jump value to 5 (arbitrary value) - changed to 4 for adjustment
+local JUMP = 4
 -- init function for Cow class - initializes the object
 function Cow:init()
     -- set image for the cow class
